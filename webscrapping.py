@@ -1,12 +1,17 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from openpyxl import Workbook
 import smtplib
 from email.message import EmailMessage
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
+user_name = os.getenv('MAIL_ID')
+pwd = os.getenv('PASS')
 
 # Initialize the Chrome driver
 serv_obj = Service("C:/chromedriver-win64/chromedriver.exe")  # Ensure correct path
@@ -67,8 +72,8 @@ wb.save("finalrecord.xlsx")
 
 
 msg=EmailMessage()
-msg['From'] = 'training invitation'
-msg['To'] = 'deepakalo47@gmail.com'
+msg['To'] = ['deepakaldo47@gmail.com','arvindarv01@gmail.com']
+msg['From'] = 'aldoenterprise8@gmail.com'
 msg['Subject'] = "training invitation"
 
 with open('EmailTemplate.txt') as myfile:
@@ -81,8 +86,9 @@ with open("finalrecord.xlsx","rb") as f: #read as binary
     msg.add_attachment(file_data,maintype="application",subtype="xlsx",filename=file_name)
 
 with smtplib.SMTP_SSL('smtp.gmail.com',465) as server:
-    server.login("aldoenterprise8@gmail.com","suntomoon")
+    server.login(user=user_name, password=pwd)
     server.send_message(msg)
 
 print(" email sent!!")
+
 
